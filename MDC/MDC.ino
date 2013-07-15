@@ -1,3 +1,52 @@
+/*
+  Megadrive Controller Bridge
+  for the Arduino Due
+
+  Fudged together by Phil: github.com/gadgetoid
+
+  This is a simple application to map
+  a 3-button Megadrive (Genesis) controller
+  to USB HID keyboard events.
+  
+  For best performance, you should turn off
+  the serial debugging.
+  
+  This is the Megadrive controller pinout
+  as seen from the front and back of a 
+  9-pin d-sub connector.
+  
+  --- FRONT ---   ---- BACK ----
+  
+    1 2 3 4 5       5 4 3 2 1
+  _____________   _____________
+  \ 0 0 0 0 0 /   \ 0 0 0 0 0 /
+   \_0_0_0_0_/     \_0_0_0_0_/
+   
+     6 7 8 9         9 8 7 6
+     
+  Use the right/back view when soldering,
+  if you hold a 9-pin d-sub up and look at it
+  from the side you solder to, this will be the
+  pinout. It probably has numbers written on it anyway!
+     
+  Pin | Select == LOW | Select == HIGH
+  1   | Up            | Up
+  2   | Down          | Down
+  3   | -             | Left
+  4   | -             | Right
+  5   | +5VDC         | +5VDC
+  6   | Button A      | Button B
+  7   | Select        | Select
+  8   | Ground        | Ground
+  9   | Start         | Button C
+   
+  Megadrive controller pinout:
+  http://pinouts.ru/Game/genesiscontroller_pinout.shtml
+
+*/
+
+#define DEBUG 1
+
 const int UP = 31,
           DOWN = 32,
           LEFT = 33,
@@ -70,73 +119,105 @@ void loop() {
   if(btn_up != last_up){
     if(btn_up == LOW){
       Keyboard.press('w');
-      Serial.println('UP pressed');
+#ifdef DEBUG
+      Serial.println("UP pressed");
+#endif
     }else{
       Keyboard.release('w');
-      Serial.println('UP released');
+#ifdef DEBUG
+      Serial.println("UP released");
+#endif
     }
   }
   if(btn_down != last_down){
     if(btn_down == LOW){
       Keyboard.press('s');
-      Serial.println('DOWN pressed');
+#ifdef DEBUG
+      Serial.println("DOWN pressed");
+#endif
     }else{
       Keyboard.release('s');
-      Serial.println('DOWN released');
+#ifdef DEBUG
+      Serial.println("DOWN released");
+#endif
     } 
   }
   if(btn_left != last_left){
     if(btn_left == LOW){
       Keyboard.press('a');
-      Serial.println('LEFT pressed');
+#ifdef DEBUG
+      Serial.println("LEFT pressed");
+#endif
     }else{
       Keyboard.release('a');
-      Serial.println('LEFT released');
+#ifdef DEBUG
+      Serial.println("LEFT released");
+#endif
     } 
   }
   if(btn_right != last_right){
     if(btn_right == LOW){
       Keyboard.press('d');
-      Serial.println('RIGHT pressed');
+#ifdef DEBUG
+      Serial.println("RIGHT pressed");
+#endif
     }else{
       Keyboard.release('d');
-      Serial.println('RIGHT released');
+#ifdef DEBUG
+      Serial.println("RIGHT released");
+#endif
     } 
   }
   if(btn_a != last_a){
     if(btn_a == LOW){
       Keyboard.press('i');
-      Serial.println('A pressed');
+#ifdef DEBUG
+      Serial.println("A pressed");
+#endif
     }else{
       Keyboard.release('i');
-      Serial.println('A released');
+#ifdef DEBUG
+      Serial.println("A released");
+#endif
     } 
   }
   if(btn_b != last_b){
     if(btn_b == LOW){
       Keyboard.press('o');
-      Serial.println('B pressed');
+#ifdef DEBUG
+      Serial.println("B pressed");
+#endif
     }else{
       Keyboard.release('o');
-      Serial.println('B released');
+#ifdef DEBUG
+      Serial.println("B released");
+#endif
     } 
   }
   if(btn_c != last_c){
     if(btn_c == LOW){
       Keyboard.press('c');
-      Serial.println('C pressed');
+#ifdef DEBUG
+      Serial.println("C pressed");
+#endif
     }else{
       Keyboard.release('c');
-      Serial.println('C released');
+#ifdef DEBUG
+      Serial.println("C released");
+#endif
     } 
   }
   if(btn_start != last_start){
     if(btn_start == LOW){
       Keyboard.press('u');
-      Serial.println('START pressed');
+#ifdef DEBUG
+      Serial.println("START pressed");
+#endif
     }else{
       Keyboard.release('u');
-      Serial.println('START released');
+#ifdef DEBUG
+      Serial.println("START released");
+#endif
     } 
   }
 }
