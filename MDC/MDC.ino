@@ -45,7 +45,7 @@
 
 */
 
-#define DEBUG 1
+//#define DEBUG 1
 
 const int UP = 31,
           DOWN = 32,
@@ -92,6 +92,8 @@ void setup() {
 }
 
 void loop() {
+  delay(1);
+  
   last_up = btn_up;
   last_down = btn_down;
   last_left = btn_left;
