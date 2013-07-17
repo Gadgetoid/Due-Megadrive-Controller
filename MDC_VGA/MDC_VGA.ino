@@ -49,7 +49,7 @@
 
 */
 
-//#define DEBUG 1
+#define DEBUG 1
 
 #define RESX 320
 #define RESY 240
@@ -83,7 +83,9 @@ int last_up = HIGH,
 int x = 160,
     y = 120,
     last_x = 160,
-    last_y = 120;
+    last_y = 120,
+    last_col = 0b00000000,
+    current_col = 1;
           
 void setup() {
   // put your setup code here, to run once:
@@ -94,10 +96,19 @@ void setup() {
     
   VGA.begin(RESX,RESY,VGA_COLOUR);
 
+  int colx = 0, coly = 0;
+
   for(int i=0;i<RESX;i++){
     for(int j=0;j<RESY;j++){   
       VGA.drawPixel(i,j,0b00000000);
     }
+  }
+  
+  
+  for(int x=0;x < 32;x++){
+   for(int y = 0;y < 8;y++){
+      VGA.drawPixel(x,y,(y*32) + x);
+   } 
   }
   
   VGA.drawPixel(x,y,0b10000010);
@@ -115,6 +126,11 @@ void setup() {
 
 void loop() {
   delay(1);
+  
+  int a_pressed = 0,
+      b_pressed = 0,
+      c_pressed = 0,
+      start_pressed = 0;
   
   last_up = btn_up;
   last_down = btn_down;
@@ -200,6 +216,7 @@ void loop() {
 #endif
     }else{
       Keyboard.release('i');
+      a_pressed = 1;
 #ifdef DEBUG
       Serial.println("A released");
 #endif
@@ -213,6 +230,7 @@ void loop() {
 #endif
     }else{
       Keyboard.release('o');
+      b_pressed = 1;
 #ifdef DEBUG
       Serial.println("B released");
 #endif
@@ -226,6 +244,7 @@ void loop() {
 #endif
     }else{
       Keyboard.release('c');
+      c_pressed = 1;
 #ifdef DEBUG
       Serial.println("C released");
 #endif
@@ -239,6 +258,7 @@ void loop() {
 #endif
     }else{
       Keyboard.release('u');
+      start_pressed = 1;
 #ifdef DEBUG
       Serial.println("START released");
 #endif
@@ -263,13 +283,62 @@ void loop() {
   if(y>240) y=RESY;
   if(y<0) y=0;
   
+  if(b_pressed) current_col++;
+  if(c_pressed) current_col--;  
+  
+  if(current_col< 1) current_col = 1;
+  if(current_col> 7) current_col = 1;
+    
+  if(btn_a == LOW){
+  
+    if(current_col == 1)
+    {
+      VGA.drawPixel(last_x,last_y,0b10000010);
+      VGA.drawPixel(last_x-1,last_y,0b01000001);
+      VGA.drawPixel(last_x+1,last_y,0b01000001);
+    }else if(current_col == 2){
+      VGA.drawPixel(last_x,last_y,  0b00010010);
+      VGA.drawPixel(last_x-1,last_y,0b00001001);
+      VGA.drawPixel(last_x+1,last_y,0b00001001);
+    }else if(current_col == 3){
+      VGA.drawPixel(last_x,last_y,  0b10010010);
+      VGA.drawPixel(last_x-1,last_y,0b01001001);
+      VGA.drawPixel(last_x+1,last_y,0b01001001);
+    } else if(current_col == 4){
+      VGA.drawPixel(last_x,last_y,  0b10010000);
+      VGA.drawPixel(last_x-1,last_y,0b01001000);
+      VGA.drawPixel(last_x+1,last_y,0b01001000);
+    }  else if(current_col == 5){
+      VGA.drawPixel(last_x,last_y,  0b10000000);
+      VGA.drawPixel(last_x-1,last_y,0b01000000);
+      VGA.drawPixel(last_x+1,last_y,0b01000000);
+    }  else if(current_col == 6){
+      VGA.drawPixel(last_x,last_y,  0b00010000);
+      VGA.drawPixel(last_x-1,last_y,0b00001000);
+      VGA.drawPixel(last_x+1,last_y,0b00001000);
+    }   else if(current_col == 7){
+      VGA.drawPixel(last_x,last_y,  0b10000000);
+      VGA.drawPixel(last_x-1,last_y,0b00010000);
+      VGA.drawPixel(last_x+1,last_y,0b00000010);
+    }   
+  
+  }else{
+    VGA.drawPixel(last_x,last_y,  last_col);
+  }
+  
+  last_col = VGA.getCPixelFast(x,y);
   VGA.drawPixel(x,y,0b00010000);
   
-  VGA.drawPixel(last_x,last_y,0b10000010);
-  VGA.drawPixel(last_x-1,last_y,0b01000001);
-  VGA.drawPixel(last_x+1,last_y,0b01000001);
+  if(start_pressed == 1){
+    for(int i=0;i<RESX;i++){
+      for(int j=0;j<RESY;j++){   
+        VGA.drawPixel(i,j,0b00000000);
+      }
+    }
+  }
+  
   
   last_x = x;
   last_y = y;
-  delay(30);
+  delay(20);
 }
