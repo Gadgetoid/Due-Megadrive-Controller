@@ -30,7 +30,7 @@ end
 
 @png.pixels.each do |pixel|
 	col = @map[@palette.pixels.index(pixel)]
-	@output << "0x" + col.to_s(2).rjust(8,"0")
+	@output << "0b" + col.to_s(2).rjust(8,"0")
 end	
 
 p @output.join(',')
