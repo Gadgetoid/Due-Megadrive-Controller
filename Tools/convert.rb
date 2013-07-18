@@ -19,7 +19,7 @@ require 'chunky_png'
 
 			col = offset + (4*d) + a
 
-			idx = y + (x*8)
+			idx = (y*32) + x
 
 			@map[idx] = col.to_i
 		end
