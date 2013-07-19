@@ -38,10 +38,10 @@ end
 
 @new_output = []
 
-@output.each_slice(32) do |slice|
+@output.each_slice(34) do |slice|
 
 	@new_output << "\t" + slice.join(',')
 
 end
 
-puts 'static unsigned char my_graphic_name[' + @output.length.to_s + "] = {\n\t" + @new_output.join(",\n") + '};'
+puts 'static unsigned char my_graphic_name[' + @output.length.to_s + "] = {\n" + @new_output.join(",\n") + '};'
