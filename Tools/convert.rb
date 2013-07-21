@@ -3,7 +3,7 @@
 require 'chunky_png'
 
 @palette = ChunkyPNG::Image.from_file('palette.png')
-@png = ChunkyPNG::Image.from_file('sonic.png')
+@png = ChunkyPNG::Image.from_file('backdrop.png')
 
 @output = []
 
