@@ -43,6 +43,26 @@
   Megadrive controller pinout:
   http://pinouts.ru/Game/genesiscontroller_pinout.shtml
 
+  Library usage:
+
+  Mdc player1(pin_up,pin_down,pin_left,pin_right,pin_ab,pin_startc,pin_select);
+
+  void loop(){
+    player1.poll();
+
+    if( player1.pressed(BTN_A) ){
+      // Jump!
+    }
+
+    if( player1.released(BTN_B) ){
+      // Pow!
+    }
+
+    if( player1.down(BTN_RIGHT) ){
+      // Whee!
+    }
+  }
+
 */
 
 #include "Arduino.h"
@@ -76,6 +96,15 @@ Mdc::Mdc(int up, int down, int left, int right, int ab, int startc, int select){
   pressed_c     = false;
   pressed_start = false;
 
+  released_up    = false;
+  released_down  = false;
+  released_left  = false;
+  released_right = false;
+  released_a     = false;
+  released_b     = false;
+  released_c     = false;
+  released_start = false;
+
   btn_up    = HIGH;
   btn_down  = HIGH;
   btn_left  = HIGH;
@@ -94,7 +123,7 @@ Mdc::Mdc(int up, int down, int left, int right, int ab, int startc, int select){
   last_c     = HIGH;
   last_start = HIGH;
 };
-boolean Mdc::down(int btn){
+boolean Mdc::down(char btn){
   switch(btn){
     case BTN_UP:
       return btn_up == LOW;
@@ -122,7 +151,45 @@ boolean Mdc::down(int btn){
       break;
   }
 };
-boolean Mdc::pressed(int btn){
+boolean Mdc::released(char btn){
+  boolean state = false;
+  switch(btn){
+    case BTN_UP:
+      state = released_up;
+      released_up = false;
+      break;
+    case BTN_DOWN:
+      state = released_down;
+      released_down = false;
+      break;
+    case BTN_LEFT:
+      state = released_left;
+      released_left = false;
+      break;
+    case BTN_RIGHT:
+      state = released_right;
+      released_right = false;
+      break;
+    case BTN_A:
+      state = released_a;
+      released_a = false;
+      break;
+    case BTN_B:
+      state = released_b;
+      released_b = false;
+      break;
+    case BTN_C:
+      state = released_c;
+      released_c = false;
+      break;
+    case BTN_START:
+      state = released_start;
+      released_start = false;
+      break;
+  }
+  return state;
+}
+boolean Mdc::pressed(char btn){
   boolean state = false;
   switch(btn){
     case BTN_UP:
@@ -185,27 +252,52 @@ void Mdc::poll(){
   digitalWrite(pin_select,LOW); 
 
   if(btn_up!=last_up && btn_up==HIGH){
-    pressed_up = true;
+    released_up = true;
   }
   if(btn_down!=last_down && btn_down==HIGH){
-    pressed_down = true;
+    released_down = true;
   }
   if(btn_left!=last_left && btn_left==HIGH){
-    pressed_left = true;
+    released_left = true;
   }
   if(btn_right!=last_right && btn_right==HIGH){
-    pressed_right = true;
+    released_right = true;
   }
   if(btn_a!=last_a && btn_a==HIGH){
-    pressed_a = true;
+    released_a = true;
   }
   if(btn_b!=last_b && btn_b==HIGH){
-    pressed_b = true;
+    released_b = true;
   }
   if(btn_c!=last_c && btn_c==HIGH){
-    pressed_c = true;
+    released_c = true;
   }
   if(btn_start!=last_start && btn_start==HIGH){
+    released_start = true;
+  }
+
+  if(btn_up!=last_up && btn_up==LOW){
+    pressed_up = true;
+  }
+  if(btn_down!=last_down && btn_down==LOW){
+    pressed_down = true;
+  }
+  if(btn_left!=last_left && btn_left==LOW){
+    pressed_left = true;
+  }
+  if(btn_right!=last_right && btn_right==LOW){
+    pressed_right = true;
+  }
+  if(btn_a!=last_a && btn_a==LOW){
+    pressed_a = true;
+  }
+  if(btn_b!=last_b && btn_b==LOW){
+    pressed_b = true;
+  }
+  if(btn_c!=last_c && btn_c==LOW){
+    pressed_c = true;
+  }
+  if(btn_start!=last_start && btn_start==LOW){
     pressed_start = true;
   }
 }

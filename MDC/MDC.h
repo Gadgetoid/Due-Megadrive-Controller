@@ -29,8 +29,9 @@ class Mdc
 {
   public:
     Mdc(int up, int down, int left, int right, int ab, int startc, int select);
-    boolean pressed(int button);
-    boolean down(int button);
+    boolean pressed(char button);
+    boolean down(char button);
+    boolean released(char button);
     void poll(); 
   private:
     int pin_up, pin_down, pin_left, pin_right, pin_ab, pin_startc, pin_select; 
@@ -42,7 +43,15 @@ class Mdc
         pressed_b,
         pressed_c,
         pressed_start;
-    int btn_up,
+    boolean released_up,
+        released_down,
+        released_left,
+        released_right,
+        released_a,
+        released_b,
+        released_c,
+        released_start;
+    char btn_up,
         btn_down,
         btn_left,
         btn_right,
@@ -50,7 +59,7 @@ class Mdc
         btn_b,
         btn_c,
         btn_start;
-    int last_up,
+    char last_up,
         last_down,
         last_left,
         last_right,
