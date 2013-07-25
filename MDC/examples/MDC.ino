@@ -1,3 +1,7 @@
+#include <crntsc.h>
+#include <crpal.h>
+#include <VGA.h>
+
 /*
   Megadrive Controller Bridge
   for the Arduino Due
@@ -47,13 +51,16 @@
 
 //#define DEBUG 1
 
-const int UP = 31,
-          DOWN = 32,
-          LEFT = 33,
-          RIGHT = 34,
-          AB = 36,
-          STARTC = 38,
-          SELECT = 37;
+#define RESX 320
+#define RESY 240
+
+const int UP = 2,
+          DOWN = 3,
+          LEFT = 4,
+          RIGHT = 5,
+          AB = 6,
+          STARTC = 9,
+          SELECT = 7;
           
 int btn_up = HIGH,
     btn_down = HIGH,
@@ -72,6 +79,11 @@ int last_up = HIGH,
     last_b = HIGH,
     last_c = HIGH,
     last_start = HIGH;
+    
+int x = 160,
+    y = 120,
+    last_x = 160,
+    last_y = 120;
           
 void setup() {
   // put your setup code here, to run once:
@@ -79,6 +91,16 @@ void setup() {
   Serial.begin(9600);
   while(!Serial)
     ;
+    
+  VGA.begin(RESX,RESY,VGA_COLOUR);
+
+  for(int i=0;i<RESX;i++){
+    for(int j=0;j<RESY;j++){   
+      VGA.drawPixel(i,j,0b00000000);
+    }
+  }
+  
+  VGA.drawPixel(x,y,0b10000010);
 
   pinMode(UP,INPUT);
   pinMode(DOWN,INPUT);
@@ -222,4 +244,32 @@ void loop() {
 #endif
     } 
   }
+  
+  if(btn_left == LOW){
+    x--;
+  }
+  if(btn_right == LOW){
+    x++;
+  }
+  if(btn_up == LOW){
+    y--;
+  }
+  if(btn_down == LOW){
+    y++;
+  }
+  
+  if(x>320) x=RESX;
+  if(x<0) x=0;
+  if(y>240) y=RESY;
+  if(y<0) y=0;
+  
+  VGA.drawPixel(x,y,0b00010000);
+  
+  VGA.drawPixel(last_x,last_y,0b10000010);
+  VGA.drawPixel(last_x-1,last_y,0b01000001);
+  VGA.drawPixel(last_x+1,last_y,0b01000001);
+  
+  last_x = x;
+  last_y = y;
+  delay(30);
 }
